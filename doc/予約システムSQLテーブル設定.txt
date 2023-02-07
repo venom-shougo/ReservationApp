@@ -1,35 +1,27 @@
 予約システム制作 MySQL テーブル設計
 ⑴テーブル名：users(親) / reservation(子)
 ⑵カラム
-  users : 
-    CREATE TABLE IF EXISTS users(
+  shop :
       id INT NOT NULL AOUT_INCREMENT,
-      signup_at DATETIME DEFAULT NOW(),
-      last_name varchar(20),
-      first_name varchar(20),
-      last_name_kana varchar(20),
-      first_name_kana varchar(20),
-      password varchar(100),
-      email varchar(100),
-      postcode varchar(8),
-      prefectures varchar(10),
-      city varchar(200),
-      block varchar(100),
-      building varchar(100),
-      phone_number varchar(20),
+      shop_name varchar(128) NOT NULL,
+      shop_id varchar(16) NOT NULL,
+      email vvarchar(256) NOT NULL,
+      password INT NOT NULL,
+      reservable_date DATE NOT NUL,
+      start_time TIME NOT NULL,
+      end_time TIME NOT NULL,
+      max_reserve_num INT NOT NULL,
       PRIMARY KEY (id)
-    );
-  reservation : 
-    CREATE TABLE IF EXISTS reservation(
-      id INT AOUT_INCREMENT,
-      users_id INT,
-      room_number varchar(10),
-      regist_at DATETIME DEFAULT NOW(),
-      reserve_at DATE,
-      reserve_at_time TIME,
-      price DECIMAL(10,3),
-      pay varchar(20),
-      cancel_at DATETIME DEFAULT NOW(),
-      PRIMARY KEY (id),
-      FOREIGN KEY (users_id) REFERENCES users(id)
-);
+
+  reserve :
+      id INT NOT NULL AOUT_INCREMENT,
+      reserve_date DATE NOT NULL,
+      reserve_time TIME NOT NULL,
+      reserve_num INT NOT NULL,
+      name varchar(100) NOT NULL,
+      email varchar(254) NOT NULL,
+      tel varchar(20) NOT NULL,
+      comment vmediumtext,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+      PRIMARY KEY (id)
