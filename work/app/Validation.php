@@ -14,7 +14,7 @@ class Validation
         if (empty($input['reserve_date'])) {
             $error['reserve_date_err'] = '予約日を選択して下さい';
         }
-        // TODO予約日はプリダウン設定値を決定後にバリデーション実装
+        // TODO:予約日はプリダウン設定値を決定後にバリデーション実装
 
         if (empty($input['reserve_num'])) {
             $error['reserve_num_err'] = '人数を選択して下さい';
@@ -25,7 +25,7 @@ class Validation
         if (empty($input['reserve_time'])) {
             $error['reserve_time_err'] = '予約時間を選択して下さい';
         }
-        // TODO予約時間はプリダウン設定値を決定後にバリデーション実装
+        // TODO:予約時間はプリダウン設定値を決定後にバリデーション実装
 
         if (empty(trim($input['name']))) {
             $error['name_err'] = '名前を入力して下さい';
