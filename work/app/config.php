@@ -7,5 +7,6 @@ require_once(__DIR__ . '/Utils.php');
 require_once(__DIR__ . '/UserLogic.php');
 require_once(__DIR__ . '/Token.php');
 require_once(__DIR__ . '/Validation.php');
+require_once(__DIR__ . '/functions.php');
 
 const ERROR_COUNT = 0;
