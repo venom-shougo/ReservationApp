@@ -12,7 +12,7 @@ include('_header.php');
         <tbody>
             <tr>
                 <th scope="row">日時</th>
-                <td><?= Utils::h($_SESSION['reserve']['reserve_date']); ?> <?= Utils::h($_SESSION['reserve']['reserve_time']); ?></td>
+                <td><?= Utils::h(formatDate($_SESSION['reserve']['reserve_date'])); ?> <?= Utils::h($_SESSION['reserve']['reserve_time']); ?></td>
             </tr>
             <tr>
                 <th scope="row">人数</th>
