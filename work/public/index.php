@@ -1,6 +1,6 @@
 <?php
 require_once(__DIR__ . '/../app/config.php');
-use Reserve\Validation\Validation as Vali;
+use Reservation\Validation\Validation as Vali;
 
 // TODO:予約日選択肢配列
 $reserveDateArray = [
@@ -38,28 +38,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (count($error) === ERROR_COUNT) {
         //セッションに保存
         $_SESSION['reserve'] = $_POST;
-        // 予約確認画面へ遷移
+        //* 予約確認画面へ遷移
         header('Location: /confirm.php');
         exit;
     }
 } else {
-    //* セッションに入力情報がある場合は取得する
+    //* 戻るボタンでセッションに入力情報がある場合は取得する
     if (isset($_SESSION['reserve'])) {
         $reserve_date = $_SESSION['reserve']['reserve_date'];
         $reserve_num = $_SESSION['reserve']['reserve_num'];
         $reserve_time = $_SESSION['reserve']['reserve_time'];
-        $reserve_name = $_SESSION['reserve']['name'];
-        $reserve_emaile = $_SESSION['reserve']['email'];
-        $reserve_tel = $_SESSION['reserve']['tel'];
-        $reserve_comment = $_SESSION['reserve']['comment'];
+        $name = $_SESSION['reserve']['name'];
+        $email = $_SESSION['reserve']['email'];
+        $tel = $_SESSION['reserve']['tel'];
+        $comment = $_SESSION['reserve']['comment'];
     } else {
         $reserve_date = '';
         $reserve_num = '';
         $reserve_time = '';
-        $reserve_name = '';
-        $reserve_emaile = '';
-        $reserve_tel = '';
-        $reserve_comment = '';
+        $name = '';
+        $email = '';
+        $tel = '';
+        $comment = '';
     }
 }
 
@@ -99,21 +99,21 @@ include('_header.php');
         </div>
         <div class="mb-3">
             <label for="validationServer04">【4】予約者情報入力</label>
-            <input type="text" class="form-control rounded-3 <?php if (isset($error['name_err']))echo 'is-invalid'; ?>" name="name" id="validationServer04" placeholder="氏名" value="<?= Utils::h($reserve_name); ?>">
+            <input type="text" class="form-control rounded-3 <?php if (isset($error['name_err']))echo 'is-invalid'; ?>" name="name" id="validationServer04" placeholder="氏名" value="<?= Utils::h($name); ?>">
             <div id="validationServer04Feedback" class="invalid-feedback"><?= Utils::h($error['name_err']); ?></div>
         </div>
         <div class="mb-3">
-            <input type="text" class="form-control rounded-3 <?php if (isset($error['email_err']))echo 'is-invalid'; ?>" name="email" placeholder="メールアドレス" value="<?= Utils::h($reserve_emaile); ?>">
+            <input type="text" class="form-control rounded-3 <?php if (isset($error['email_err']))echo 'is-invalid'; ?>" name="email" placeholder="メールアドレス" value="<?= Utils::h($email); ?>">
             <div id="validationServer05Feedback" class="invalid-feedback"><?= Utils::h($error['email_err']); ?></div>
         </div>
         <div class="mb-3">
             <input type="tel" class="form-control rounded-3 <?php if (isset($error['tel_err']))
-                echo 'is-invalid'; ?>" name="tel" placeholder="電話番号" value="<?= Utils::h($reserve_tel); ?>">
+                echo 'is-invalid'; ?>" name="tel" placeholder="電話番号" value="<?= Utils::h($tel); ?>">
             <div id="validationServer06Feedback" class="invalid-feedback"><?= Utils::h($error['tel_err']); ?></div>
         </div>
         <div class="mb-3">
             <label for="validationServer07" class="form-label">【5】備考欄</label>
-            <textarea class="form-control rounded-3 <?php if (isset($error['comment_err']))echo 'is-invalid'; ?>" name="comment" rows="3" id="validationServer07" placeholder="備考欄"><?= Utils::h($reserve_comment); ?></textarea>
+            <textarea class="form-control rounded-3 <?php if (isset($error['comment_err']))echo 'is-invalid'; ?>" name="comment" rows="3" id="validationServer07" placeholder="備考欄"><?= Utils::h($comment); ?></textarea>
             <div id="validationServer07Feedback" class="invalid-feedback"><?= Utils::h($error['comment_err']); ?></div>
         </div>
         <div class="d-grid gap-2 p-2">

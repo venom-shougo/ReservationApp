@@ -1,13 +1,40 @@
 <?php
 
 require_once(__DIR__ . '/../app/config.php');
+use Reservation\Reserve\Reserve;
+
+//* 予約確定ボタンが押された場合の処理
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+ //* セッションに入力情報がある場合は取得する
+    if (isset($_SESSION['reserve'])) {
+        $reserveData = $_SESSION['reserve'];
+        //TODO:予約が確定可能かどうか最終チェック
+        //* reserve テーブルに INSERT
+        $reserve = new Reserve();
+        if ($reserve->registerReservation($reserveData)) {
+            //* 予約が正常に完了したらセッションデータをクリア
+            unset($_SESSION['reserve']);
+            //* DB から切断
+            unset($reserve->$pdo);
+            //* 予約完了画面表示
+            header('Location: /complete.php');
+            exit;
+        } else {
+            echo '登録失敗';
+        }
+    } else {
+        //* セッションからデータを取得できない場合はエラー
+        //TODO:エラー処理
+    }
+}
 
 include('_header.php');
 ?>
 <header class="text-white bg-dark text-center p-3">SAMPEL SHOP</header>
 
 <h1 class="h2 text-center p-3">予約確認画面</h1>
-<div class="container">
+
+<form method="post">
     <table class="table bg-white">
         <tbody>
             <tr>
@@ -37,9 +64,10 @@ include('_header.php');
         </tbody>
     </table>
     <div class="d-grid gap-2 mx-3">
-        <a class="btn btn-primary rounded-pill mb-1" href="complete.php">予約確定</a>
+        <button class="btn btn-primary rounded-pill mb-1" type="submit">予約確定</button>
         <a class="btn btn-secondary rounded-pill" href="/">戻る</a>
     </div>
-</div>
+</form>
+
 <?php
     include('_footer.php');
