@@ -1,5 +1,5 @@
 <?php
-namespace Reserve\Validation;
+namespace Reservation\Validation;
 class Validation
 {
     /**
