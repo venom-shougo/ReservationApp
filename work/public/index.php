@@ -1,28 +1,31 @@
 <?php
 require_once(__DIR__ . '/../app/config.php');
 use Reservation\Validation\Validation as Vali;
+use Reservation\DB\Database;
 
-// TODO:予約日選択肢配列
-$reserveDateArray = [
-    '0' => '日時',
-    '20230623' => '6/23',
-    '20230816' => '8/16',
-    '20231011' => '10/11',
-];
-// TODO:人数選択肢配列
-$reserveNumArray = [
-    '0' => '人数',
-    '1' => '1人',
-    '2' => '2人',
-    '3' => '3人',
-];
-// TODO:予約時間選択肢配列
-$reserveTimeArray = [
-    '0' => '時間',
-    '12:00' => '12:00',
-    '14:00' => '14:00',
-    '16:00' => '16:00',
-];
+$shop = Database::getShopData('1');
+var_dump($shop);
+//* 予約日選択肢配列
+$reserveDateArray = [];
+for ($i = 0; $i <= $shop['reservable_date']; $i++) {
+    //* 対象日を取得
+    $targetDate = strtoTime("+{$i} day");
+    //* 配列に設定
+    $reserveDateArray[date('Ymd', $targetDate)] = date('n/j', $targetDate);
+}
+
+//* 人数選択肢配列
+$reserveNumArray = [];
+for ($i = 1; $i <= $shop['max_reserve_num']; $i++) {
+    //* 配列に設定
+    $reserveNumArray[$i] = $i;
+}
+
+//* 予約時間選択肢配列
+$reserveTimeArray = [];
+for ($i = date('G', strtotime($shop['start_time'])); $i <= date('G', strtotime($shop['end_time'])); $i++) {
+    $reserveTimeArray[sprintf('%02d', $i).':00'] = sprintf('%02d', $i).':00';
+}
 
 $error = [];
 
