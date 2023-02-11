@@ -8,10 +8,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
  //* セッションに入力情報がある場合は取得する
     if (isset($_SESSION['reserve'])) {
         $reserveData = $_SESSION['reserve'];
+        $email = $_SESSION['reserve']['email'];
         //TODO:予約が確定可能かどうか最終チェック
         //* reserve テーブルに INSERT
         $reserve = new Reserve();
         if ($reserve->registerReservation($reserveData)) {
+            //* 予約者に予約完了メール送信
+            $form = 'Form: Web予約システムReserve <'.ADMIN_EMAIL.'>';
+            $subject = 'ご予約が確定しました。';
+            $viewReserveDate = formatDate($_SESSION['reserve']['reserve_date']);
+            $body = <<<EOT
+{$_SESSION['reserve']['name']}様
+
+以下の内容でご予約を承りました。
+
+ご予約内容
+[日時]{$viewReserveDate}{$_SESSION['reserve']['reserve_time']}
+[人数]{$_SESSION['reserve']['reserve_num']}人
+[氏名]{$_SESSION['reserve']['name']}様
+[メールアドレス]{$_SESSION['reserve']['email']}
+[電話番号]{$_SESSION['reserve']['tel']}
+[備考]{$_SESSION['reserve']['comment']}
+EOT;
+            //TODO:メール送信はサーバー上で実施
+            // mb_send_mail($email, $subject, $body, $form);
             //* 予約が正常に完了したらセッションデータをクリア
             unset($_SESSION['reserve']);
             //* DB から切断
