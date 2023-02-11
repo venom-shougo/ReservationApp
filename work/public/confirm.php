@@ -30,12 +30,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 [電話番号]{$_SESSION['reserve']['tel']}
 [備考]{$_SESSION['reserve']['comment']}
 EOT;
+            //* 店舗管理者に予約完了メール送信
+            $subject = '【Reserve】予約が確定しました。';
+            $body = <<<EOT
+
+以下の内容で予約が確定しました。
+
+ご予約内容
+[日時]{$viewReserveDate}{$_SESSION['reserve']['reserve_time']}
+[人数]{$_SESSION['reserve']['reserve_num']}人
+[氏名]{$_SESSION['reserve']['name']}様
+[メールアドレス]{$_SESSION['reserve']['email']}
+[電話番号]{$_SESSION['reserve']['tel']}
+[備考]{$_SESSION['reserve']['comment']}
+EOT;
             //TODO:メール送信はサーバー上で実施
             // mb_send_mail($email, $subject, $body, $form);
+            // mb_send_mail(ADMIN_EMAIL, $subject, $body, $form);
             //* 予約が正常に完了したらセッションデータをクリア
             unset($_SESSION['reserve']);
-            //* DB から切断
-            unset($reserve->$pdo);
             //* 予約完了画面表示
             header('Location: /complete.php');
             exit;

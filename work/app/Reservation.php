@@ -5,7 +5,7 @@ use Reservation\DB\Database;
 
 class Reserve extends Database
 {
-    protected $tableName = 'reserve';
+    protected $tableName = 'reservation';
 
     public function registerReservation(array $reserveData):bool
     {
@@ -28,11 +28,12 @@ class Reserve extends Database
             $stmt->bindValue(':comment', (string)$reserveData['comment'], \PDO::PARAM_STR);
             $result = $stmt->execute();
             $pdo->commit();
-            return $result;
         } catch(\PDOException $e) {
             $pdo->rollback();
             echo 'DB登録失敗' . $e->getMessage();
             return $result;
         }
+        $pdo = null;
+        return $result;
     }
 }
