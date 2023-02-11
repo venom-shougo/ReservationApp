@@ -23,7 +23,9 @@ $reserveTimeArray = [
     '14:00' => '14:00',
     '16:00' => '16:00',
 ];
+
 $error = [];
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     //* POSTパラメータから各種入力値を受け取る
     $reserve_date = $_POST['reserve_date'];
@@ -34,13 +36,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $tel = $_POST['tel'];
     $comment = $_POST['comment'];
     //* 入力値バリデーション
-    $error = Vali::inputValueCheck($_POST);
-    if (count($error) === ERROR_COUNT) {
+    if (empty(Vali::inputValueCheck($_POST))) {
         //セッションに保存
         $_SESSION['reserve'] = $_POST;
         //* 予約確認画面へ遷移
         header('Location: /confirm.php');
         exit;
+    } else {
+        $error = Vali::inputValueCheck($_POST);
     }
 } else {
     //* 戻るボタンでセッションに入力情報がある場合は取得する
