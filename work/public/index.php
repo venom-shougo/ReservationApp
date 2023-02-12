@@ -4,7 +4,6 @@ use Reservation\Validation\Validation as Vali;
 use Reservation\DB\Database;
 
 $shop = Database::getShopData('1');
-var_dump($shop);
 //* 予約日選択肢配列
 $reserveDateArray = [];
 for ($i = 0; $i <= $shop['reservable_date']; $i++) {
@@ -40,11 +39,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $comment = $_POST['comment'];
     //* 入力値バリデーション
     if (empty(Vali::inputValueCheck($_POST))) {
-        //セッションに保存
-        $_SESSION['reserve'] = $_POST;
-        //* 予約確認画面へ遷移
-        header('Location: /confirm.php');
-        exit;
+        //* DBのreservationテーブルからその日時の「予約成立済み人数」を取得
+        $reserveCount = Database::getReservationLimit($reserve_date, $reserve_time);
+        if ($reserveCount && ($reserveCount + $reserve_num) > $shop['max_reserve_num']) {
+            $error['common'] = 'この日時はすでに予約が埋まっております。';
+        } else {
+            //* セッションに保存
+            $_SESSION['reserve'] = $_POST;
+            //* 予約確認画面へ遷移
+            header('Location: /confirm.php');
+            exit;
+        }
     } else {
         $error = Vali::inputValueCheck($_POST);
     }
@@ -76,6 +81,9 @@ include('_header.php');
 <h1 class="h2 text-center p-3">ご来店予約</h1>
 <div class="container">
     <form class="m-3" method="post">
+        <?php if (isset($error['common'])) : ?>
+            <div class="alert alert-danger" role="alert"><?= Utils::h($error['common']); ?></div>
+        <?php endif; ?>
         <div class="mb-3">
             <label for="validationServer01" class="form-label">【1】予約日選択</label>
                 <?php if (isset($error['reserve_date_err'])) : ?>
