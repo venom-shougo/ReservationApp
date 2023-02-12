@@ -7,7 +7,7 @@ CREATE TABLE shop (
     shop_id varchar(16) NOT NULL,
     email varchar(256) NOT NULL,
     password INT NOT NULL,
-    reservable_date DATE NOT NULL,
+    reservable_date INT NOT NULL,
     start_time TIME NOT NULL,
     end_time TIME NOT NULL,
     max_reserve_num INT NOT NULL,
