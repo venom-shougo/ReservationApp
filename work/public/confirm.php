@@ -8,12 +8,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
  //* セッションに入力情報がある場合は取得する
     if (isset($_SESSION['reserve'])) {
         $reserveData = $_SESSION['reserve'];
-        $email = $_SESSION['reserve']['email'];
-        //TODO:予約が確定可能かどうか最終チェック
-        //* reserve テーブルに INSERT
-        $reserve = new Reserve();
-        if ($reserve->registerReservation($reserveData)) {
-            //* 予約者に予約完了メール送信
+        $reserve_date = $reserveData['reserve_date'];
+        $reserve_num = $reserveData['reserve_num'];
+        $reserve_time = $reserveData['reserve_time'];
+
+        //* 予約が確定可能かどうか最終チェック
+        //* DBのreservationテーブルからその日時の「予約成立済み人数」を取得
+        $shop = Reserve::getShopData('1');
+        $reserveCount = Reserve::getReservationLimit($reserve_date, $reserve_time);
+        if ($reserveCount && ($reserveCount + $reserve_num) > $shop['max_reserve_num']) {
+            $error['common'] = "この日時はすでに予約が埋まっております。\n予約画面に戻って予約情報を変更して下さい。";
+        } else {
+            //* reserve テーブルに INSERT
+            $reserve = new Reserve();
+            $reserveResult = $reserve->registerReservation($reserveData);
+        }
+        //* 予約者に予約完了メール送信
+        if (!empty($reserveResult)) {
+            $email = $_SESSION['reserve']['email'];
             $form = 'Form: Web予約システムReserve <'.ADMIN_EMAIL.'>';
             $subject = 'ご予約が確定しました。';
             $viewReserveDate = formatDate($_SESSION['reserve']['reserve_date']);
@@ -52,8 +64,6 @@ EOT;
             //* 予約完了画面表示
             header('Location: /complete.php');
             exit;
-        } else {
-            echo '登録失敗';
         }
     } else {
         //* セッションからデータを取得できない場合はエラー
@@ -68,6 +78,9 @@ include('_header.php');
 <h1 class="h2 text-center p-3">予約確認画面</h1>
 
 <form method="post">
+    <?php if (isset($error['common'])) : ?>
+        <div class="alert alert-danger" role="alert"><?= nl2br(Utils::h($error['common'])); ?></div>
+    <?php endif; ?>
     <table class="table bg-white">
         <tbody>
             <tr>

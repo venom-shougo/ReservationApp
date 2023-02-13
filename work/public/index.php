@@ -1,9 +1,9 @@
 <?php
 require_once(__DIR__ . '/../app/config.php');
 use Reservation\Validation\Validation as Vali;
-use Reservation\DB\Database;
+use Reservation\Reserve\Reserve;
 
-$shop = Database::getShopData('1');
+$shop = Reserve::getShopData('1');
 //* 予約日選択肢配列
 $reserveDateArray = [];
 for ($i = 0; $i <= $shop['reservable_date']; $i++) {
@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     //* 入力値バリデーション
     if (empty(Vali::inputValueCheck($_POST))) {
         //* DBのreservationテーブルからその日時の「予約成立済み人数」を取得
-        $reserveCount = Database::getReservationLimit($reserve_date, $reserve_time);
+        $reserveCount = Reserve::getReservationLimit($reserve_date, $reserve_time);
         if ($reserveCount && ($reserveCount + $reserve_num) > $shop['max_reserve_num']) {
             $error['common'] = 'この日時はすでに予約が埋まっております。';
         } else {
