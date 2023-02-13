@@ -7,6 +7,12 @@ class Reserve extends Database
 {
     protected $tableName = 'reservation';
 
+    /**
+     * 来店予約登録処理
+     *
+     * @param array $reserveData
+     * @return boolean
+     */
     public function registerReservation(array $reserveData):bool
     {
         $result = false;
@@ -16,7 +22,6 @@ class Reserve extends Database
                     (:reserve_date, :reserve_time, :reserve_num, :name, :email, :tel, :comment)";
         $pdo = $this->connect();
         $pdo->beginTransaction();
-
         try {
             $stmt = $pdo->prepare($sql);
             $stmt->bindValue(':reserve_date', (string)$reserveData['reserve_date'], \PDO::PARAM_STR);
@@ -33,6 +38,7 @@ class Reserve extends Database
             echo 'DB登録失敗' . $e->getMessage();
             return $result;
         }
+        $stmt = null;
         $pdo = null;
         return $result;
     }

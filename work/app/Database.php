@@ -3,7 +3,13 @@ namespace Reservation\DB;
 class Database
 {
     protected $tableName;
-    public static function connect()
+
+    /**
+     * データベース接続
+     *
+     * @return 
+     */
+    public static function connect(): \PDO
     {
         try {
         $pdo = new \PDO(
