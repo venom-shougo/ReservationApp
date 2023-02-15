@@ -7,7 +7,7 @@ class Database
     /**
      * データベース接続
      *
-     * @return 
+     * @return
      */
     public static function connect(): \PDO
     {
