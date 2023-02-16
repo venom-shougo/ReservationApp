@@ -9,7 +9,7 @@ class Database
      *
      * @return
      */
-    public static function connect(): \PDO
+    protected function connect(): \PDO
     {
         try {
         $pdo = new \PDO(
@@ -33,7 +33,7 @@ class Database
      * @param string $shopId
      * @return array|boolean
      */
-    public static function getShopData(string $shopId): array|bool
+    public function getShopData(string $shopId): array|bool
     {
         $result = false;
         $sql = "SELECT * FROM shop WHERE id = :id";
@@ -50,7 +50,42 @@ class Database
         }
     }
 
-    public static function getReservationLimit(string $reserve_date, string $reserve_time): string|bool
+    /**
+     * ショップ登録前同一ID検証
+     *
+     * @param integer $shopId
+     * @return boolean
+     */
+    public function identityValidation(string $shopId): bool
+    {
+        $result = false;
+        $sql = "SELECT COUNT(id) FROM shop WHERE shop_id = :shop_id";
+
+        try {
+            $stmt = self::connect()->prepare($sql);
+            $stmt->bindValue(':shop_id', $shopId, \PDO::PARAM_INT);
+            $stmt->execute();
+            $shopId = $stmt->fetch();
+            if ($shopId['COUNT(id)'] == SAME_ID_COUNT) {
+                $result = true;
+                return $result;
+            } else {
+                return $result;
+            }
+        } catch (\PDOException $e) {
+            echo '同一ID検証失敗' . $e->getMessage();
+            return $result;
+        }
+    }
+
+    /**
+     * 予約者の予約日時から予約可能人数を取得
+     *
+     * @param string $reserve_date
+     * @param string $reserve_time
+     * @return string|boolean
+     */
+    public function getReservationLimit(string $reserve_date, string $reserve_time): string|bool
     {
         $result = false;
         $sql = "SELECT
