@@ -2,7 +2,6 @@
 
 require_once(__DIR__ . '/../../app/config.php');
 
-use Reservation\Shop\ShopLogic;
 use Reservation\DB\Database;
 use Reservation\Validation\Validation as Vali;
 
@@ -23,9 +22,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $error['shop_id_error'] = 'IDがすでに使われています。違うIDを入力して下さい。';
         } else {
             //* 同IDがなかったらセッションにPOST値を代入しadminn_confirm.phpへ遷移
-            $shop = new ShopLogic($shopName, $shopId, $shopemail, $shopPass);
-            $createShop = $shop->createShop();
-            echo '同じIDなし';
+            $_SESSION['signup'] = $signup;
+            header('Location: ./admin_confirm.php');
+            exit;
         }
     } else {
         //* 入力バリデーションエラーがあったらエラー表示

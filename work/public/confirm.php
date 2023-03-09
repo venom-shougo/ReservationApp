@@ -3,6 +3,8 @@
 require_once(__DIR__ . '/../app/config.php');
 use Reservation\Reserve\Reserve;
 
+$reser = new Reserve();
+
 //* 予約確定ボタンが押された場合の処理
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
  //* セッションに入力情報がある場合は取得する
@@ -14,8 +16,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         //* 予約が確定可能かどうか最終チェック
         //* DBのreservationテーブルからその日時の「予約成立済み人数」を取得
-        $shop = Reserve::getShopData('1');
-        $reserveCount = Reserve::getReservationLimit($reserve_date, $reserve_time);
+        $shop = $reser->getShopData('1');
+        $reserveCount = $reser->getReservationLimit($reserve_date, $reserve_time);
         if ($reserveCount && ($reserveCount + $reserve_num) > $shop['max_reserve_num']) {
             $error['common'] = "この日時はすでに予約が埋まっております。\n予約画面に戻って予約情報を変更して下さい。";
         } else {
