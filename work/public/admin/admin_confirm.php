@@ -3,7 +3,7 @@ require_once(__DIR__ . '/../../app/config.php');
 use Reservation\Shop\ShopLogic;
 
 $error = [];
-var_dump($_SESSION['signup']);
+
 //* 確定ボタンが押されたらPOST判定
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     //* セッションの値を変数に代入
