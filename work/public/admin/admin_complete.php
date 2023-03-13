@@ -1,8 +1,13 @@
 <?php
+require_once(__DIR__ . '/../../app/config.php');
+
 include('../_header.php');
 ?>
 <header class="text-white bg-dark text-center p-3">SAMPEL SHOP</header>
-
+<?php if (isset($_SESSION['createShopError'])) : ?>
+    <div class="alert alert-danger text-center" role="alert"><?= Utils::h($_SESSION['createShopError']); ?></div>
+    <div class="d-grid gap-2 p-2"><a class="btn btn-secondary rounded-pill" href="admin_signup.php">戻る</a></div>
+<?php else : ?>
 <h1 class="h2 text-center p-3">店舗登録完了</h1>
 <div class="container">
 
@@ -16,6 +21,7 @@ include('../_header.php');
         </div>
     </div>
 </div>
+<?php endif; ?>
 <?php
     include('../_footer.php');
 // 店舗登録完了画面
