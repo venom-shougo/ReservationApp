@@ -3,6 +3,9 @@ require_once(__DIR__ . '/../../app/config.php');
 include('../_header.php');
 use Reservation\Shop\ShopLogic;
 
+
+$error = [];
+
 //* 確定ボタンが押されたらPOST判定
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     //* セッションの値を変数に代入
