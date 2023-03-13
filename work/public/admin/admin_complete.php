@@ -1,5 +1,6 @@
 <?php
 require_once(__DIR__ . '/../../app/config.php');
+
 include('../_header.php');
 ?>
 <header class="text-white bg-dark text-center p-3">SAMPEL SHOP</header>

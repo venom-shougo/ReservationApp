@@ -38,6 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $shopId = $_SESSION['signup']['shop_id'];
         $shopEmail = $_SESSION['signup']['email'];
     } else {
+        //* 登録エラー、不正アクセスで戻ってきた時の処理
         $shopName = '';
         $shopId = '';
         $shopEmail = '';

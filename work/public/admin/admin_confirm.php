@@ -22,6 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } else {
         //* 登録失敗処理
         $_SESSION['createShopError'] = "店舗登録ができません。\n最初からやり直して下さい。";
+        //* セッション削除
         unset($_SESSION['signup']);
         header('Location: ./admin_complete.php');
         exit;
