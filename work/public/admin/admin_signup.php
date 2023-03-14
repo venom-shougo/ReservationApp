@@ -4,6 +4,7 @@ require_once(__DIR__ . '/../../app/config.php');
 
 use Reservation\DB\Database;
 use Reservation\Validation\Validation as Vali;
+use ScssPhp\ScssPhp\Util;
 
 unset($_SESSION['createShopError']);
 $error =[];
@@ -15,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $shopId = $_POST['shop_id'];
     $shopEmail = $_POST['email'];
     $shopPass = $_POST['password'];
-    if (empty(Vali::validateSignup($signup))) {
+    if (empty($error = Vali::validateSignup($signup))) {
         //* バリデーションエラーが無かったらDBに同IDがないかバリデーション
         if ($db->identityValidation($signup['shop_id'])) {
             //* 同IDがあったらエラー表示
@@ -26,10 +27,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             header('Location: ./admin_confirm.php');
             exit;
         }
-    } else {
-        //* 入力バリデーションエラーがあったらエラー表示
-        $error = Vali::validateSignup($signup);
-        echo '検証エラーあり';
     }
 } else {
     //* 店舗登録確認画面から戻ってきた場合の処理
@@ -55,19 +52,19 @@ include('../_header.php');
 
         <div class="mb-3">
             <label for="validationServer01">【1】店舗名</label>
-            <input type="text" class="form-control rounded-3 <?php if (isset($error['shop_name_error']))echo 'is-invalid'; ?>" name="shop_name" id="validationServer01" placeholder="店舗名" value="<?php if (isset($shopName)); echo $shopName; ?>">
+            <input type="text" class="form-control rounded-3 <?php if (isset($error['shop_name_error']))echo 'is-invalid'; ?>" name="shop_name" id="validationServer01" placeholder="店舗名" value="<?php if (isset($shopName)); echo Utils::h($shopName); ?>">
             <div id="validationServer01Feedback" class="invalid-feedback"><?= Utils::h($error['shop_name_error']); ?></div>
         </div>
 
         <div class="mb-3">
             <label for="validationServer02">【2】店舗ID</label>
-            <input type="text" class="form-control rounded-3 <?php if (isset($error['shop_id_error']))echo 'is-invalid'; ?>" name="shop_id" id="validationServer02" placeholder="店舗ID" value="<?php if (isset($shopId)); echo $shopId; ?>">
+            <input type="text" class="form-control rounded-3 <?php if (isset($error['shop_id_error']))echo 'is-invalid'; ?>" name="shop_id" id="validationServer02" placeholder="店舗ID" value="<?php if (isset($shopId)); echo Utils::h($shopId); ?>">
             <div id="validationServer02Feedback" class="invalid-feedback"><?= Utils::h($error['shop_id_error']); ?></div>
         </div>
 
         <div class="mb-3">
             <label for="validationServer03">【3】メールアドレス</label>
-            <input type="text" class="form-control rounded-3 <?php if (isset($error['shop_email_err']))echo 'is-invalid'; ?>" name="email" id="validationServer03" placeholder="メールアドレス" value="<?php if (isset($shopEmail)); echo $shopEmail; ?>">
+            <input type="text" class="form-control rounded-3 <?php if (isset($error['shop_email_err']))echo 'is-invalid'; ?>" name="email" id="validationServer03" placeholder="メールアドレス" value="<?php if (isset($shopEmail)); echo Utils::h($shopEmail); ?>">
             <div id="validationServer03Feedback" class="invalid-feedback"><?= Utils::h($error['shop_email_err']); ?></div>
         </div>
 
