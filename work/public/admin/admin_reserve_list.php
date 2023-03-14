@@ -1,4 +1,6 @@
 <?php
+require_once(__DIR__ . '/../../app/config.php');
+var_dump($_SESSION['shop_user']);
 include('../_header.php');
 ?>
 <header class="navbar bg-dark  p-3">

@@ -63,7 +63,7 @@ class Database
 
         try {
             $stmt = self::connect()->prepare($sql);
-            $stmt->bindValue(':shop_id', $shopId, \PDO::PARAM_INT);
+            $stmt->bindValue(':shop_id', $shopId, \PDO::PARAM_STR);
             $stmt->execute();
             $shopId = $stmt->fetch();
             if ($shopId['COUNT(id)'] == SAME_ID_COUNT) {
@@ -74,6 +74,31 @@ class Database
             }
         } catch (\PDOException $e) {
             echo '同一ID検証失敗' . $e->getMessage();
+            return $result;
+        }
+    }
+
+    /**
+     * ショップログイン
+     *
+     * @param string $shopId
+     * @param string $shopPass
+     * @return array|bool
+     */
+    public function shopLogin(string $shopId, string $shopPass):array|bool
+    {
+        $result = false;
+        $sql = "SELECT * FROM shop WHERE shop_id = :shop_id AND password = :password LIMIT 1";
+
+        try {
+            $stmt = self::connect()->prepare($sql);
+            $stmt->bindValue(':shop_id', $shopId, \PDO::PARAM_STR);
+            $stmt->bindValue(':password', $shopPass, \PDO::PARAM_STR);
+            $stmt->execute();
+            $result = $stmt->fetch();
+            return $result;
+        } catch(\Exception $e) {
+            echo 'ログイン失敗' . $e->getMessage();
             return $result;
         }
     }

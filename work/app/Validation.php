@@ -89,4 +89,24 @@ class Validation
         }
         return $error;
     }
+
+    /**
+     * Undocumented function
+     *
+     * @return array
+     */
+    public static function validateLogin(string $shopId, string $shopPass): array
+    {
+        $error = [];
+
+        if (empty(trim($shopId))) {
+            $error['shop_id_error'] = 'ショップIDを入力して下さい。';
+        }
+
+        if (empty(trim($shopPass))) {
+            $error['shop_password_error'] = 'パスワードを入力して下さい。';
+        }
+        
+        return $error;
+    }
 }
