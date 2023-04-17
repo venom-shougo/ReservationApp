@@ -29,9 +29,33 @@ function arrayToSelect(string $inputName, string $isInvalid, array $srcArray, st
 
     return $temphtml;
 }
+/**
+ * Undocumented function
+ *
+ * @param string $inputName
+ * @param array $srcArray
+ * @param string $selectedIndex
+ * @return string
+ */
+function SelectYearMonthArray(string $inputName, array $srcArray, string $selectedIndex = ''): string
+{
+    $temphtml = '<select class="form-select form-control rounded-3" name="'.$inputName.'">' . PHP_EOL;
+    //* キーと選択値比較、一致したらcelectedを付ける
+    foreach ($srcArray as $key => $val) {
+        if ($key == $selectedIndex) {
+            $selectedText = 'selected';
+        } else {
+            $selectedText = '';
+        }
+        $temphtml .='<option value="'.$key.'"'.$selectedText.'>'.$val.'</option>' . PHP_EOL;
+    }
+    $temphtml .= '</select>' . PHP_EOL;
+
+    return $temphtml;
+}
 
 /**
- * 日付を表示形式に変換
+ * 日付を表示形式に変換[n/j(W)]
  *
  * @param string $yyyymmdd
  * @return string
@@ -39,4 +63,15 @@ function arrayToSelect(string $inputName, string $isInvalid, array $srcArray, st
 function formatDate(string $yyyymmdd): string
 {
     return date('n/j('.WEEK[date('w', strtotime($yyyymmdd))] . ')', strtotime($yyyymmdd));
+}
+
+/**
+ * 時間を表示形式に変換[00:00]
+ *
+ * @param [type] $time
+ * @return void
+ */
+function formatTime($time)
+{
+    return substr($time, 0, -3);
 }
