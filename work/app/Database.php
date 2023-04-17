@@ -112,7 +112,7 @@ class Database
      */
     public function getReservationLimit(string $reserve_date, string $reserve_time): string|bool
     {
-        $result = false;
+        $reservCount = false;
         $sql = "SELECT
                     SUM(reserve_num)
                 FROM reservation
@@ -131,8 +131,39 @@ class Database
             return $reservCount;
         } catch(\PDOException $e) {
             echo 'データ取得失敗' . $e->getMessage();
+            return $reservCount;
+        }
+    }
+
+    /**
+     * 予約リストから予約者取得
+     *
+     * @param string $year
+     * @param string $month
+     * @return array|boolean
+     */
+    public function getReservationInformation(string $year, string $month): array|bool
+    {
+        $result = false;
+        $sql = "SELECT
+                    *
+                FROM reservation
+                WHERE DATE_FORMAT(reserve_date, '%Y%m') = :yyyymm
+                ORDER BY
+                    reserve_date, reserve_time";
+        try {
+            $pdo = self::connect();
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindValue(':yyyymm', $year.$month, \PDO::PARAM_STR);
+            $stmt->execute();
+            $result = $stmt->fetchAll();
+            return $result;
+        } catch(\PDOException $e) {
+            echo 'データ取得失敗' . $e->getMessage();
             return $result;
         }
 
     }
+
+
 }

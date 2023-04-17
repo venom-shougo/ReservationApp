@@ -1,6 +1,30 @@
 <?php
 require_once(__DIR__ . '/../../app/config.php');
-var_dump($_SESSION['shop_user']);
+use Reservation\Reserve\Reserve;
+$reserve = new Reserve();
+// var_dump($_SESSION['shop_user']);
+//* 年、月プルダウンの構築
+$isInvalid = '';
+$year_array = [];
+$current_year = date('Y');
+for ($i = ($current_year - 1); $i <= ($current_year + 3); $i++) {
+    $year_array[$i] = $i. '年';
+}
+
+$month_array = [];
+for ($i = 1; $i <= 12; $i++) {
+    $month_array[sprintf('%02d', $i)] = $i. '月';
+}
+
+$year = @$_GET['year'];
+$month = @$_GET['month'];
+if (!$year) {
+    $year = date('Y');
+}
+if (!$month) {
+    $month = date('m');
+}
+
 include('../_header.php');
 ?>
 <header class="navbar bg-dark  p-3">
@@ -14,66 +38,42 @@ include('../_header.php');
     </header>
 
 <h1 class="h2 text-center p-3">予約リスト</h1>
-
-<div class="row g-3 m-3">
-    <div class="col">
-        <select class="form-select form-control" aria-label="Default select example">
-            <option selected>2022年</option>
-            <option value="1">One</option>
-            <option value="2">Two</option>
-            <option value="3">Three</option>
-        </select>
+<form id="filter-form" method="get">
+    <div class="row g-3 m-3">
+        <div class="col">
+            <?= SelectYearMonthArray('year', $year_array, $year); ?>
+        </div>
+        <div class="col">
+            <?= SelectYearMonthArray('month', $month_array, $month); ?>
+        </div>
     </div>
-    <div class="col">
-        <select class="form-select form-control" aria-label="Default select example">
-            <option selected>1月</option>
-            <option value="1">One</option>
-            <option value="2">Two</option>
-            <option value="3">Three</option>
-        </select>
-    </div>
-</div>
+</form>
 
 <div class="container p-0">
-    <table class="table bg-white mt-5">
-        <tbody>
-            <tr>
-                <th scope="row">2/2（木）12:00</th>
-                <td>西本正吾　4名<br>
-                    xxx@xxx.com<br>
-                    xxx-xxxx-xxxx<br>
-                    備考欄の内容</td>
-            </tr>
-            <tr>
-                <th scope="row">2/3（金）14:00</th>
-                <td>西本正吾　4名<br>
-                    xxx@xxx.com<br>
-                    xxx-xxxx-xxxx<br>
-                    備考欄の内容</td>
-            </tr>
-            <tr>
-                <th scope="row">2/4（土）18:00</th>
-                <td>西本正吾　4名<br>
-                    xxx@xxx.com<br>
-                    xxx-xxxx-xxxx<br>
-                    備考欄の内容</td>
-            </tr>
-            <tr>
-                <th scope="row">2/5（日）20:00</th>
-                <td>西本正吾　4名<br>
-                    xxx@xxx.com<br>
-                    xxx-xxxx-xxxx<br>
-                    備考欄の内容</td>
-            </tr>
-            <tr>
-                <th scope="row">2/6（火）15:00</th>
-                <td>西本正吾　4名<br>
-                    xxx@xxx.com<br>
-                    xxx-xxxx-xxxx<br>
-                    備考欄の内容</td>
-            </tr>
-        </tbody>
-    </table>
+    <?php if (!$reserve->getReservationInformation($year, $month)) : ?>
+        <div class="alert alert-warning" role="alert">予約データがありません。</div>
+    <?php else : ?>
+        <table class="table bg-white mt-5">
+            <tbody>
+                <?php foreach ($reserve->getReservationInformation($year, $month) as $reserveList) : ?>
+                <tr>
+                    <th scope="row"><?= formatDate($reserveList['reserve_date']); ?>　<?= formatTime($reserveList['reserve_time']); ?></th>
+                    <td><?= $reserveList['name']; ?>　<?= $reserveList['reserve_num']; ?>名<br>
+                        <?= $reserveList['email']; ?><br>
+                        <?= $reserveList['tel']; ?><br>
+                        <?= mb_strimwidth($reserveList['comment'], 0, 90, '...'); ?><br>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    <?php endif; ?>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+<script>
+    $('.form-select').change(function() {
+        $('#filter-form').submit()
+    })
+</script>
 <?php
     include('../_footer.php');
